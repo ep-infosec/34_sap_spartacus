@@ -1,0 +1,74 @@
+<div
+  class="form-group"
+  *ngIf="attribute.values && attribute.values.length !== 0"
+>
+  <label
+    for="{{ createAttributeIdForConfigurator(attribute) }}"
+    class="cx-visually-hidden"
+  >
+    {{
+      'configurator.a11y.listbox'
+        | cxTranslate
+          : {
+              count: attribute.values.length
+            }
+    }}
+  </label>
+  <select
+    id="{{ createAttributeIdForConfigurator(attribute) }}"
+    class="form-control"
+    [formControl]="attributeDropDownForm"
+    [cxFocus]="{ key: attribute.name }"
+    (change)="onSelect(attributeDropDownForm.value)"
+    [attr.aria-describedby]="createAttributeUiKey('label', attribute.name)"
+  >
+    <option
+      *ngFor="let item of attribute.values"
+      [label]="getLabel(expMode, item.valueDisplay, item.valueCode)"
+      [selected]="item.selected"
+      [attr.aria-label]="getAriaLabel(item, attribute)"
+      [value]="item.valueCode"
+    >
+      {{ getLabel(expMode, item.valueDisplay, item.valueCode) }}
+    </option>
+  </select>
+  <div
+    *ngIf="!withQuantity && getSelectedValue()?.valuePrice"
+    class="cx-value-price"
+  >
+    <cx-configurator-price
+      [formula]="extractValuePriceFormulaParameters(getSelectedValue())"
+    ></cx-configurator-price>
+  </div>
+</div>
+<div *ngIf="withQuantity" class="cx-attribute-level-quantity-price">
+  <cx-configurator-attribute-quantity
+    (changeQuantity)="onChangeQuantity($event, attributeDropDownForm)"
+    [quantityOptions]="extractQuantityParameters(attributeDropDownForm)"
+  ></cx-configurator-attribute-quantity>
+  <cx-configurator-price
+    [formula]="extractPriceFormulaParameters()"
+  ></cx-configurator-price>
+</div>
+
+<cx-configurator-attribute-numeric-input-field
+  *ngIf="isAdditionalValueNumeric"
+  class="cx-configurator-attribute-additional-value"
+  [attribute]="attribute"
+  [ownerType]="ownerType"
+  [ownerKey]="ownerKey"
+  [language]="language"
+  (inputChange)="onSelectAdditionalValue($event)"
+  [attr.aria-label]="'configurator.a11y.additionalValue' | cxTranslate"
+></cx-configurator-attribute-numeric-input-field>
+
+<cx-configurator-attribute-input-field
+  *ngIf="isAdditionalValueAlphaNumeric"
+  class="cx-configurator-attribute-additional-value"
+  [attribute]="attribute"
+  [ownerType]="ownerType"
+  [ownerKey]="ownerKey"
+  (inputChange)="onSelectAdditionalValue($event)"
+  [attr.aria-label]="'configurator.a11y.additionalValue' | cxTranslate"
+>
+</cx-configurator-attribute-input-field>

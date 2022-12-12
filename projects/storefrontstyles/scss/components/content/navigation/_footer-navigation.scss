@@ -1,0 +1,33 @@
+%cx-footer-navigation {
+  a {
+    font-size: var(--cx-font-small, 0.8rem);
+    &:hover {
+      color: var(--cx-color-inverse);
+      text-decoration: underline;
+    }
+  }
+
+  cx-navigation-ui {
+    // first level heading / links
+    span {
+      text-transform: uppercase;
+      @include type('5');
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    justify-content: center;
+
+    > nav > ul {
+      display: flex;
+
+      @include media-breakpoint-down(sm) {
+        flex-direction: column;
+      }
+
+      > li {
+        margin: 3vw;
+      }
+    }
+  }
+}
